@@ -24,4 +24,8 @@ public class AttachmentFetcher {
       path.append(ret.reverse().toString());
       return path.toString();
    }
+   
+   public IssueLogIterator GetLogIterator(Issue issue) {
+	   return new IssueLogIterator();
+   }
 }
