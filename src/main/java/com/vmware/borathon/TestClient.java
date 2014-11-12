@@ -1,5 +1,6 @@
 package com.vmware.borathon;
 
+import b4j.core.Attachment;
 import b4j.core.Issue;
 
 public class TestClient {
@@ -10,9 +11,12 @@ public class TestClient {
          if (issue != null) {
             System.out.println(issue.getSummary());
          }
-         issue = fetcher.getBug("1320034");
+         issue = fetcher.getBug("1350176");
          if (issue != null) {
             System.out.println(issue.getSummary());
+            for (Attachment log : issue.getAttachments()) {
+               System.out.println(log.getFilename());
+            }
          }
          
          System.out.println("Path: " + new AttachmentFetcher(issue).getAttachmentDir());

@@ -1,5 +1,9 @@
 package com.vmware.borathon;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import b4j.core.Issue;
 
 public class AttachmentFetcher {
@@ -25,7 +29,8 @@ public class AttachmentFetcher {
       return path.toString();
    }
    
-   public IssueLogIterator GetLogIterator(Issue issue) {
-	   return new IssueLogIterator();
+   public Iterator<IssueLog> GetLogIterator(Issue issue) {
+      List<IssueLog> logs = new ArrayList<IssueLog>();
+	   return logs.iterator();
    }
 }
