@@ -3,7 +3,6 @@ package com.vmware.borathon;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import b4j.core.Issue;
 
 public class AttachmentFetcher {
