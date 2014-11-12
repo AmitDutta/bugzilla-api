@@ -23,6 +23,19 @@
             <version>2.0.1</version>
         </dependency>
         
+	    <dependency>
+    		<groupId>com.vmware.borathon</groupId>
+    		<artifactId>ai-guru.grammar</artifactId>
+    		<version>1.0</version>
+		</dependency>
+		
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr4-runtime</artifactId>
+            <version>4.0</version>
+            <scope>compile</scope>
+        </dependency>
+        
 		<dependency>
     		<groupId>junit</groupId>
     		<artifactId>junit</artifactId>
