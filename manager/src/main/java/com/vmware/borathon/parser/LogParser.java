@@ -74,11 +74,6 @@ public class LogParser {
 	}
 
 	void ComputePhrases(IssueLog log, OutputStream outputStream) throws IOException {
-		Iterator<Pattern> patterns = GetPatterns(log.GetPath());
-		
-		if (patterns == null)
-			return;
-		
 		ANTLRInputStream inputStream = new ANTLRInputStream(log.GetStream());
 		PhraseLexer lexer = new PhraseLexer(inputStream);
 		CommonTokenStream tokenStream = new CommonTokenStream(lexer);
