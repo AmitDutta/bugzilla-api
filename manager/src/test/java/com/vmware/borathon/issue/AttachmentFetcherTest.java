@@ -5,19 +5,36 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.Scanner;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
+
+import com.vmware.borathon.Util;
 
 import b4j.core.Issue;
 
 public class AttachmentFetcherTest {
    private static String mountDir;
    private static String unzipDir;
+   private static String userName;
+   private static String password;
    
    @BeforeClass
    public static void setUpBeforeClass() throws Exception {
+      try {
+         String configPath = System.getProperty("user.dir") + "/data/config.txt";
+         File file = new File(configPath);
+         Scanner scanner = new Scanner(file);
+         userName = scanner.next();
+         password = scanner.next();
+         scanner.close();
+      }catch (Exception ex) {
+         ex.printStackTrace();
+      }
+      
       mountDir = System.getProperty("java.io.tmpdir") + "bugs/";
       unzipDir = System.getProperty("java.io.tmpdir") + "unzip/";
       String cmd = "mount -t nfs bugs.eng.vmware.com:/bugs " + mountDir;
@@ -35,8 +52,16 @@ public class AttachmentFetcherTest {
    }
    
    @Test
+   public void testBugDirectoryEmpty() {
+      assertFalse(Util.isEmptyDir(786447, mountDir));
+      assertTrue(Util.isEmptyDir(290807, mountDir));
+      assertFalse(Util.isEmptyDir(717116, mountDir));
+      assertTrue(Util.isEmptyDir(1306239, mountDir));
+   }
+   
+   @Test
    public void testBasicIssueLogIterator() {
-      BugFetcher fetcher = new BugFetcher("amitd", "pwd");
+      BugFetcher fetcher = new BugFetcher(userName, password);
       Issue issue = fetcher.getBug("1355263"); //1350176
       if (issue != null) {
          AttachmentFetcher aFetcher = new AttachmentFetcher(issue, mountDir + "files/", unzipDir);
@@ -59,7 +84,27 @@ public class AttachmentFetcherTest {
    }
    
    @Test
-   public void testGetAttachmentDir() {
+   public void IssueIteratorWithZipFile() {
+      BugFetcher fetcher = new BugFetcher(userName, password);
+      Issue issue = fetcher.getBug("786447"); //1350176
+      if (issue != null) {
+         AttachmentFetcher aFetcher = new AttachmentFetcher(issue, mountDir + "files/", unzipDir);
+         aFetcher.processLogs();
+         Iterator<IssueLog> iterator = aFetcher.iterator();
+         while (iterator.hasNext()) {
+            IssueLog iLog = iterator.next();
+            assertNotNull(iLog.getPath());
+            System.out.println(iLog.getPath());
+            assertNotNull(iLog.getStream());
+            try {
+               iLog.getStream().close();
+            } catch (IOException e) {
+               // TODO Auto-generated catch block
+               e.printStackTrace();
+            }
+         }
+         aFetcher.clean();
+      }
    }
    
    @AfterClass

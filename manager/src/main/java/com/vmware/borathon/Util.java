@@ -1,5 +1,7 @@
 package com.vmware.borathon;
 
+import java.io.File;
+
 public final class Util {
    
    public static String getAttachmentDir(int id, String sourceDirPrefix) {
@@ -20,5 +22,13 @@ public final class Util {
       
       path.append(ret.reverse().toString());
       return path.toString();
+   }
+   
+   public static boolean isEmptyDir(int id, String sourceDirPrefix) {
+      boolean empty = true;
+      String dirPath = getAttachmentDir(id, sourceDirPrefix + "files/");
+      File dir = new File(dirPath);
+      if (dir.exists() && dir.isDirectory() && dir.list().length > 0) empty = false;
+      return empty;
    }
 }
