@@ -16,15 +16,18 @@ import b4j.core.Issue;
 
 public class AttachmentFetcher {
    private Issue issue;
-   private final String sourceDirPrefix = "/Users/amitd/Documents/mnt/bugs/files/";
-   private final String tmpDirPrefix = "/Users/amitd/Documents/tmp/";
    private Set<String> items;
    private List<String> logs;
+   private String sourceDirPrefix;
+   private String tmpDirPrefix;
    
-   public AttachmentFetcher(Issue issue) {
+   public AttachmentFetcher(Issue issue, String sourceDirPrefix, String tmpDirPrefix) {
       if (issue == null) throw new IllegalArgumentException("Argument issue is NULL");
       this.issue = issue;
-      processLogs();
+      this.sourceDirPrefix = sourceDirPrefix;
+      this.tmpDirPrefix = tmpDirPrefix;
+      items = new HashSet<String>();
+      logs = new ArrayList<String>();
    }
    
    public String getAttachmentDir() {
@@ -46,7 +49,7 @@ public class AttachmentFetcher {
 	   return logs.iterator();
    }
    
-   private void processLogs() {
+   public void processLogs() {
       
       String tmpBugPath = tmpDirPrefix + issue.getId() + "/";
       
@@ -62,9 +65,7 @@ public class AttachmentFetcher {
          return;
       }
       
-      // Traverse temp directory recursively to unzip and get log files
-      items = new HashSet<String>();
-      logs = new ArrayList<String>();
+      // Traverse temp directory recursively to unzip and get log file
       items.add(tmpBugPath);
       unzipRecursive();
    }
