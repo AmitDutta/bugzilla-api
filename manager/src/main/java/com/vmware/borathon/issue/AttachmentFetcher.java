@@ -12,6 +12,8 @@ import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 
+import com.vmware.borathon.Util;
+
 import b4j.core.Issue;
 
 public class AttachmentFetcher {
@@ -117,7 +119,7 @@ public class AttachmentFetcher {
             }
          } else if (file.isFile()) {
             if (file.getName().endsWith(".tgz") || file.getName().endsWith(".tar.gz")) {
-          	   System.out.println("uncompress " + file.getAbsolutePath() + "...");
+          	   System.out.println("UNTAR " + file.getAbsolutePath() + "...");
                String cmd = "tar -zxf " + file.getAbsolutePath() + " -C " + file.getParent();
                try {
                   Process untar = Runtime.getRuntime().exec(cmd);
@@ -127,6 +129,9 @@ public class AttachmentFetcher {
                }catch (Exception ex) {
                   ex.printStackTrace();
                }
+            } else if (file.getName().endsWith(".zip")) {
+               System.out.println("UNZIP " + file.getAbsolutePath() + "...");
+               
             } else if (file.getName().endsWith(".gz")) {
                String cmd = "gzip -d " + file.getAbsolutePath();
                try {
@@ -152,6 +157,21 @@ public class AttachmentFetcher {
       }
    }
    
+   public void clean() {
+      try {
+         // Remove the tmp folder
+         System.out.println("Cleaning tmp directory: " + tmpBugPath);
+         try {
+            Process p = Runtime.getRuntime().exec("rm -rf " + tmpBugPath);
+            p.waitFor();
+         } catch (Exception ex) {
+            ex.printStackTrace();
+         }         
+      }catch (Exception ex) {
+         ex.printStackTrace();
+      }
+   }
+   
    public Iterator<IssueLog> iterator() { return new IssueLogIterator(); }
    
    public static String getFileNameFromGz(String gzName) {
@@ -162,16 +182,6 @@ public class AttachmentFetcher {
       private int i = 0;
       @Override
       public boolean hasNext() {
-        if (i == logs.size()) {
-           // Remove the tmp folder
-           System.out.println("Cleaning tmp directory: " + tmpBugPath);
-           try {
-              Process p = Runtime.getRuntime().exec("rm -rf " + tmpBugPath);
-              p.waitFor();
-           } catch (Exception ex) {
-              ex.printStackTrace();
-           }
-        }
         return i == logs.size() ? false : true;
       }
 
