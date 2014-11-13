@@ -36,11 +36,8 @@ public class LogParserTest {
 		
 		assertEquals("", result);
 	}
-
-	@Test
-	public void javaException() throws IOException {
-		
-		String sample = 
+	
+	private String nullException = 
 "java.lang.NullPointerException\n" +
 "	at com.vmware.vim.sms.policy.PolicyAdapterImpl.copyVasaComplianceResult(PolicyAdapterImpl.java:69)\n" +
 "	at com.vmware.vim.sms.policy.PolicyManagerImpl.queryComplianceResult(PolicyManagerImpl.java:150)\n" +
@@ -51,9 +48,22 @@ public class LogParserTest {
 "	at java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)\n" +
 "	at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)\n" +
 "	at java.lang.Thread.run(Unknown Source)\n";
+
+	@Test
+	public void javaException() throws IOException {
+
 		
+		String result = parse(nullException);
+		
+		assertEquals(nullException, result);
+	}
+
+	@Test
+	public void javaExceptionNoise() throws IOException {
+		String sample = "noice " + nullException + "noise\nmore noice\n " + nullException;
+
 		String result = parse(sample);
 		
-		assertEquals(sample, result);
+		assertEquals(nullException + nullException, result);
 	}
 }

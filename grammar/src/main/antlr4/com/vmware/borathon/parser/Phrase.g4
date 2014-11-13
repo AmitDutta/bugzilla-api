@@ -2,11 +2,11 @@ grammar Phrase;
 
 phrases
    :  phrase*
-      UNKNUWN*
    ;
 
 phrase
    :  javaException
+   |  unknown
    ;
 
 javaException
@@ -20,7 +20,7 @@ javaExceptionName
    ;
 
 javaExceptionLocation
-   :  javaLocation*
+   :  javaLocation+
    ;
 
 javaLocation
@@ -38,6 +38,22 @@ javaFile
 javaLocationDelimiter
    :  DOT
    |  DOLLAR
+   ;
+
+unknown
+   :  OPEN_BRAKET
+   |  CLOSE_BRAKET
+   |  COLON
+   |  DOT
+   |  DOLLAR
+   |  AT
+   |  UNKNOWN_SOURCE
+   |  ECEPTION
+   |  IDENTIFIER
+   |  NUMBER
+   |  WS
+   |  EOL
+   |  ANY
    ;
 
 OPEN_BRAKET:         '(';
@@ -72,9 +88,9 @@ EOL
 	:	('\n' | '\r\n')
 	;
 
-UNKNOWN
-	:	. -> skip
-	;
+ANY
+   :  .
+   ;
 
 fragment
 LETTER

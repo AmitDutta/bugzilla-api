@@ -191,5 +191,11 @@ public class AttachmentFetcher {
          }
          return issueLog;
       }
+
+	@Override
+	public void remove() {
+		// TODO Auto-generated method stub
+		
+	}
    }
 }
