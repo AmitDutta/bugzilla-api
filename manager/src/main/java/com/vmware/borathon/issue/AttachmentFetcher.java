@@ -10,7 +10,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import net.lingala.zip4j.core.ZipFile;
+
 import org.apache.commons.io.FileUtils;
+
+import com.vmware.borathon.Util;
 
 import b4j.core.Issue;
 
@@ -20,6 +24,7 @@ public class AttachmentFetcher {
    private List<String> logs;
    private String sourceDirPrefix;
    private String tmpDirPrefix;
+   private String tmpBugPath;
    
    public AttachmentFetcher(Issue issue, String sourceDirPrefix, String tmpDirPrefix) {
       if (issue == null) throw new IllegalArgumentException("Argument issue is NULL");
@@ -51,7 +56,7 @@ public class AttachmentFetcher {
    
    public void processLogs() {
       
-      String tmpBugPath = tmpDirPrefix + issue.getId() + "/";
+      tmpBugPath = tmpDirPrefix + issue.getId() + "/";
       
       // Create a directory to process in tmp directory
       if (!createDirectory(tmpBugPath)) {
@@ -68,6 +73,15 @@ public class AttachmentFetcher {
       // Traverse temp directory recursively to unzip and get log file
       items.add(tmpBugPath);
       unzipRecursive();
+      
+      // Remove the tmp folder
+      /*System.out.println("Cleaning tmp directory: " + tmpBugPath);
+      try {
+         Process p = Runtime.getRuntime().exec("rm -rf " + tmpBugPath);
+         p.waitFor();
+      } catch (Exception ex) {
+         ex.printStackTrace();
+      }*/
    }
    
    private boolean createDirectory(String tmpBugPath) {
@@ -80,8 +94,7 @@ public class AttachmentFetcher {
    
    private boolean copyDirectory(String tmpBugPath) {
       boolean copied = false;
-      
-      String sourceBugPath =  getAttachmentDir();
+      String sourceBugPath = Util.getAttachmentDir(Integer.parseInt(issue.getId()), sourceDirPrefix);
       System.out.println("source bug path: " + sourceBugPath);
       // Copy all log files to tmp directory
       File source = new File (sourceBugPath);
@@ -96,30 +109,6 @@ public class AttachmentFetcher {
       return copied;
    }
    
-   /*private void traverse(File file, String space, final String tmpBugPath) {
-      if (file.isFile()) {
-         if (file.getName().endsWith(".tgz") || file.getName().endsWith(".tar.gz")) {
-            String cmd = "tar -zxf " + file.getAbsolutePath() + " -C " + tmpBugPath;
-            System.out.println("Execute: " + cmd);
-            try {
-               Process untar = Runtime.getRuntime().exec(cmd);
-               untar.waitFor();
-            } catch (Exception e) {
-               // TODO Auto-generated catch block
-               e.printStackTrace();
-            }
-         }
-         return;
-      }
-      else if (file.isDirectory()) {
-         System.out.println(space + file.getName());
-         File[] listOfFiles = file.listFiles();
-         for (File child : listOfFiles) {
-            traverse(child, space + " ", tmpBugPath);
-         }
-      }
-   }*/
-   
    private void unzipRecursive() {
       while (items.size() > 0) {
          String currentPath = items.iterator().next();
@@ -132,7 +121,7 @@ public class AttachmentFetcher {
             }
          } else if (file.isFile()) {
             if (file.getName().endsWith(".tgz") || file.getName().endsWith(".tar.gz")) {
-          	   System.out.println("uncompress " + file.getAbsolutePath() + "...");
+          	   System.out.println("UNTAR " + file.getAbsolutePath() + "...");
                String cmd = "tar -zxf " + file.getAbsolutePath() + " -C " + file.getParent();
                try {
                   Process untar = Runtime.getRuntime().exec(cmd);
@@ -142,6 +131,17 @@ public class AttachmentFetcher {
                }catch (Exception ex) {
                   ex.printStackTrace();
                }
+            } else if (file.getName().endsWith(".zip")) {
+               System.out.println("UNZIP " + file.getAbsolutePath() + "...");
+               try {
+                  ZipFile zipFile = new ZipFile(file.getAbsolutePath());
+                  zipFile.extractAll(file.getParent());
+                  items.add(file.getParent());
+                  file.delete();
+               }catch (Exception ex) {
+                  ex.printStackTrace();
+               }
+               
             } else if (file.getName().endsWith(".gz")) {
                String cmd = "gzip -d " + file.getAbsolutePath();
                try {
@@ -164,6 +164,21 @@ public class AttachmentFetcher {
                logs.add(file.getAbsolutePath());
             }
          }
+      }
+   }
+   
+   public void clean() {
+      try {
+         // Remove the tmp folder
+         System.out.println("Cleaning tmp directory: " + tmpBugPath);
+         try {
+            Process p = Runtime.getRuntime().exec("rm -rf " + tmpBugPath);
+            p.waitFor();
+         } catch (Exception ex) {
+            ex.printStackTrace();
+         }         
+      }catch (Exception ex) {
+         ex.printStackTrace();
       }
    }
    
@@ -193,10 +208,8 @@ public class AttachmentFetcher {
          return issueLog;
       }
 
-	@Override
-	public void remove() {
-		// TODO Auto-generated method stub
-		
-	}
+   	@Override
+   	public void remove() {
+   	}
    }
 }

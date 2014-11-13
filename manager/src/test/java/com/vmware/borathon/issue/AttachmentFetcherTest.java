@@ -37,7 +37,7 @@ public class AttachmentFetcherTest {
    @Test
    public void testBasicIssueLogIterator() {
       BugFetcher fetcher = new BugFetcher("amitd", "pwd");
-      Issue issue = fetcher.getBug("1350176");
+      Issue issue = fetcher.getBug("1355263"); //1350176
       if (issue != null) {
          AttachmentFetcher aFetcher = new AttachmentFetcher(issue, mountDir + "files/", unzipDir);
          aFetcher.processLogs();
@@ -54,7 +54,12 @@ public class AttachmentFetcherTest {
                e.printStackTrace();
             }
          }
+         aFetcher.clean();
       }
+   }
+   
+   @Test
+   public void testGetAttachmentDir() {
    }
    
    @AfterClass
