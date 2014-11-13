@@ -1,2 +1,2 @@
-amitd
-!05432Mn7891
+USERNAME
+PWD
