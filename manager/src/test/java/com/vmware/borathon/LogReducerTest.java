@@ -43,14 +43,14 @@ public class LogReducerTest {
       }
    }
    
-   @Test
+   //@Test
    public void testReduce() throws IOException {
 	   String number = "1355263"; 
 	   
        BugFetcher fetcher = new BugFetcher("ggeorgiev", "");
        Issue issue = fetcher.getBug(number);
        
-       FileOutputStream output = new FileOutputStream(outputDir + number + ".txt");
+       FileOutputStream output = new FileOutputStream(outputDir + "/" + number + ".txt");
        
        AttachmentFetcher aFetcher = new AttachmentFetcher(issue, mountDir + "files/", unzipDir);
 
