@@ -11,9 +11,15 @@ public class PhraseDocumentVisitor extends PhraseBaseVisitor<Boolean> {
 		this.outputStream = outputStream;
 	}
 	
+	public static String normalizePhrase(String phrase) {
+		return phrase.replaceAll("\n", " & ") + "\n";
+	}
+	
 	@Override 
 	public Boolean visitJavaException(PhraseParser.JavaExceptionContext ctx) {
 		String phrase = ctx.getText();
+		
+		phrase = normalizePhrase(phrase);
 		try {
 			outputStream.write(phrase.getBytes());
 		} catch (IOException e) {

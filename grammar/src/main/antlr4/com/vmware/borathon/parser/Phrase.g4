@@ -10,13 +10,17 @@ phrase
    ;
 
 javaException
-	:	javaExceptionName EOL
+	:	javaExceptionName (javaExceptionMessage|EOL)
       javaExceptionLocation
 	;
 
 javaExceptionName
    :  (IDENTIFIER DOT)*
       EXCEPTION
+   ;
+
+javaExceptionMessage
+   :  COLON (~AT)*
    ;
 
 javaExceptionLocation
@@ -31,7 +35,7 @@ javaLocation
    ;
 
 javaFile
-   :  IDENTIFIER '.java' COLON NUMBER
+   :  IDENTIFIER JAVA_EXTENSION COLON NUMBER
    |  UNKNOWN_SOURCE
    ;
 
@@ -41,14 +45,15 @@ javaLocationDelimiter
    ;
 
 unknown
-   :  OPEN_BRAKET
+   :  AT
+   |  JAVA_EXTENSION
+   |  UNKNOWN_SOURCE
+   |  OPEN_BRAKET
    |  CLOSE_BRAKET
    |  COLON
    |  DOT
    |  DOLLAR
-   |  AT
-   |  UNKNOWN_SOURCE
-   |  ECEPTION
+   |  EXCEPTION
    |  IDENTIFIER
    |  NUMBER
    |  WS
@@ -56,14 +61,15 @@ unknown
    |  ANY
    ;
 
+AT:                  'at';
+JAVA_EXTENSION:      '.java';
+UNKNOWN_SOURCE:      'Unknown Source';
+
 OPEN_BRAKET:         '(';
 CLOSE_BRAKET:        ')';
 COLON:               ':';
 DOT:                 '.';
 DOLLAR:              '$';
-
-AT:                  'at';
-UNKNOWN_SOURCE:      'Unknown Source';
 
 EXCEPTION
    :  LETTER (LETTER|ID_DIGIT)*
