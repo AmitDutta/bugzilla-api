@@ -8,11 +8,11 @@ public class IssueLog {
 		this.stream = stream;
 	}
 	
-	public String GetPath() {
+	public String getPath() {
 		return path;
 	}
 	
-	public InputStream GetStream() {
+	public InputStream getStream() {
 		return stream;
 	}
 
