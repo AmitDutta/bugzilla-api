@@ -21,6 +21,7 @@ public class PhraseDocumentVisitor extends PhraseBaseVisitor<Boolean> {
 		
 		phrase = normalizePhrase(phrase);
 		try {
+			System.out.println("   phrase " + phrase.substring(50));
 			outputStream.write(phrase.getBytes());
 		} catch (IOException e) {
 			return false;

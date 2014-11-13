@@ -13,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
 
-import com.vmware.borathon.IssueLog;
+import com.vmware.borathon.issue.IssueLog;
 
 public class LogParserTest {
 	
@@ -24,7 +24,7 @@ public class LogParserTest {
 		
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		
-		parser.ComputePhrases(log, output);
+		parser.computePhrases(log, output);
 		
 		return new String( output.toByteArray(), StandardCharsets.UTF_8);			
 	}
@@ -77,6 +77,7 @@ public class LogParserTest {
 		assertEquals(expected, result);
 	}
 
+	/*
 	@Test
 	public void spsLog() throws IOException {
 		FileInputStream stream = new FileInputStream("/Users/ggeorgiev/Downloads/vc-sof2-lab8-dhcp516-2014-11-07--14.59/var/log/vmware/vmware-sps/sps.log.1");
@@ -91,4 +92,7 @@ public class LogParserTest {
 
 		assertEquals(39, count);		
 	}
+	*/
+	
+	
 }
