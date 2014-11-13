@@ -13,8 +13,8 @@ import com.vmware.borathon.issue.IssueLog;
 
 public class LogParser {
 	
-	private Pattern spsRegex = Pattern.compile(".*/sps.*");	
-	private Pattern invservRegex = Pattern.compile(".*/invserv.*");
+	private Pattern spsRegex = Pattern.compile(".*/sps\\.log.*");	
+	private Pattern invservRegex = Pattern.compile(".*/inv-svc\\.log.*");
 	
 	ParseTree getParseTree(String path, CommonTokenStream tokenStream) {
 		Matcher spsMatcher = spsRegex.matcher(path);

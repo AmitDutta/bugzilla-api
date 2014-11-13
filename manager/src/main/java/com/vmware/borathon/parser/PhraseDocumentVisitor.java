@@ -15,17 +15,28 @@ public class PhraseDocumentVisitor extends PhraseBaseVisitor<Boolean> {
 		return phrase.replaceAll("\n", " & ") + "\n";
 	}
 	
-	@Override 
-	public Boolean visitJavaException(PhraseParser.JavaExceptionContext ctx) {
-		String phrase = ctx.getText();
-		
+	private Boolean handlePhrase(String phrase) {		
 		phrase = normalizePhrase(phrase);
 		try {
-			System.out.println("   phrase " + phrase.substring(50));
+			if (phrase.length() > 50)
+				System.out.println("   phrase " + phrase.substring(0, 50) + "...");
+			else
+				System.out.println("   phrase " + phrase);
+				
 			outputStream.write(phrase.getBytes());
 		} catch (IOException e) {
 			return false;
 		}
-		return true;
+		return true;		
+	}
+	
+	@Override 
+	public Boolean visitJavaException(PhraseParser.JavaExceptionContext ctx) {
+		return handlePhrase(ctx.getText());
+	}
+	
+	@Override 
+	public Boolean visitBacktrace(PhraseParser.BacktraceContext ctx) {
+		return handlePhrase(ctx.getText());
 	}
 }

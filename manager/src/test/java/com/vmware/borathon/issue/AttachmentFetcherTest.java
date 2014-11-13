@@ -40,7 +40,7 @@ public class AttachmentFetcherTest {
       String cmd = "mount -t nfs bugs.eng.vmware.com:/bugs " + mountDir;
       File destDir = new File(mountDir);
       if (!destDir.exists()) {
-         destDir.mkdir();
+         destDir.mkdirs();
       }
       System.out.println("Executing: " + cmd);
       try {
