@@ -1,4 +1,4 @@
-package com.vmware.borathon;
+package com.vmware.borathon.issue;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -71,13 +71,11 @@ public class AttachmentFetcher {
    }
    
    private boolean createDirectory(String tmpBugPath) {
-      boolean created = false;
       File tmpDir = new File(tmpBugPath);
       if (!tmpDir.exists()) {
-         tmpDir.mkdir();
-         created = true;
+         tmpDir.mkdirs();
       }
-      return created;
+      return true;
    }
    
    private boolean copyDirectory(String tmpBugPath) {
@@ -134,6 +132,7 @@ public class AttachmentFetcher {
             }
          } else if (file.isFile()) {
             if (file.getName().endsWith(".tgz") || file.getName().endsWith(".tar.gz")) {
+          	   System.out.println("uncompress " + file.getAbsolutePath() + "...");
                String cmd = "tar -zxf " + file.getAbsolutePath() + " -C " + file.getParent();
                try {
                   Process untar = Runtime.getRuntime().exec(cmd);
@@ -146,6 +145,7 @@ public class AttachmentFetcher {
             } else if (file.getName().endsWith(".gz")) {
                String cmd = "gzip -d " + file.getAbsolutePath();
                try {
+            	  System.out.println("uncompress " + file.getAbsolutePath() + "...");
                   Process untar = Runtime.getRuntime().exec(cmd);
                   untar.waitFor();
                   String unzippedFile = getFileNameFromGz(file.getAbsolutePath());

@@ -1,5 +1,8 @@
 package com.vmware.borathon;
 
+import com.vmware.borathon.issue.AttachmentFetcher;
+import com.vmware.borathon.issue.BugFetcher;
+
 import b4j.core.Attachment;
 import b4j.core.Issue;
 
@@ -19,7 +22,7 @@ public class TestClient {
             }
          }
          
-         System.out.println("Path: " + new AttachmentFetcher(issue).getAttachmentDir());
+         //System.out.println("Path: " + new AttachmentFetcher(issue).getAttachmentDir());
 //         BugzillaHttpSession session = new BugzillaHttpSession();
 //         session.setBaseUrl(new URL("https://bugzilla.eng.vmware.com"));
 //         session.setBugzillaBugClass(DefaultIssue.class);
