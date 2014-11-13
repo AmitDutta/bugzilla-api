@@ -1,9 +1,16 @@
 package com.vmware.borathon.parser;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.TokenStream;
+import org.antlr.v4.runtime.tree.ParseTree;
 
 import com.vmware.borathon.IssueLog;
 
@@ -66,17 +73,16 @@ public class LogParser {
 		return null;
 	}
 
-	Iterator<Phrase> ComputePhrases(IssueLog log) {
-		ArrayList<Phrase> phrases = new ArrayList<Phrase>();
+	void ComputePhrases(IssueLog log, OutputStream outputStream) throws IOException {
+		ANTLRInputStream inputStream = new ANTLRInputStream(log.GetStream());
+		PhraseLexer lexer = new PhraseLexer(inputStream);
+		CommonTokenStream tokenStream = new CommonTokenStream(lexer);
 		
-		Iterator<Pattern> patterns = GetPatterns(log.GetPath());
-		
-		if (patterns == null)
-			return phrases.iterator();
-		
-		
-		
-		
-		return phrases.iterator();
+		PhraseParser parser = new PhraseParser(tokenStream);
+		ParseTree tree = parser.phrases();
+
+		PhraseDocumentVisitor visitor = new PhraseDocumentVisitor(outputStream);
+
+		visitor.visit(tree);
 	}
 }
