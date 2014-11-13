@@ -10,6 +10,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import net.lingala.zip4j.core.ZipFile;
+
 import org.apache.commons.io.FileUtils;
 
 import com.vmware.borathon.Util;
@@ -131,6 +133,14 @@ public class AttachmentFetcher {
                }
             } else if (file.getName().endsWith(".zip")) {
                System.out.println("UNZIP " + file.getAbsolutePath() + "...");
+               try {
+                  ZipFile zipFile = new ZipFile(file.getAbsolutePath());
+                  zipFile.extractAll(file.getParent());
+                  items.add(file.getParent());
+                  file.delete();
+               }catch (Exception ex) {
+                  ex.printStackTrace();
+               }
                
             } else if (file.getName().endsWith(".gz")) {
                String cmd = "gzip -d " + file.getAbsolutePath();
