@@ -157,11 +157,7 @@ public class AttachmentFetcher {
                }catch(Exception ex) {
                   ex.printStackTrace();
                }
-            } else if (file.getName().endsWith(".log")
-                       || file.getName().startsWith("vmkernel")
-                       || file.getName().startsWith("hostd")
-                       || file.getName().startsWith("vpxd")
-                       || file.getName().startsWith("sps")) {
+            } else {
                logs.add(file.getAbsolutePath());
             }
          }
