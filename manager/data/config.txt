@@ -1,2 +1,2 @@
-ggeorgiev
-global`12
+USERNAME
+PASSWORD
