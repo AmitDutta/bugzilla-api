@@ -36,6 +36,8 @@ public class AttachmentFetcher {
       logs = new ArrayList<String>();
    }
    
+   public Issue getIssue() { return issue; }
+   
    public String getAttachmentDir() {
       int id = Integer.parseInt(issue.getId());
       StringBuffer path = new StringBuffer(sourceDirPrefix);
