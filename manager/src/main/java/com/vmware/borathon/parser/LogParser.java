@@ -13,27 +13,33 @@ import com.vmware.borathon.issue.IssueLog;
 public class LogParser {
 	
 	private Pattern spsRegex = Pattern.compile(".*/sps\\.log.*");	
-	private Pattern invservRegex = Pattern.compile(".*/inv-svc\\.log.*");
+	private Pattern invservRegex = Pattern.compile(".*/inv-svc\\.log.*");	
+	private Pattern vpxdRegex = Pattern.compile(".*/vpxd(-\\d+)?\\.log");
 	
-	PhraseParser getParser(String path, CommonTokenStream tokenStream) {
+	PhraseParser getParser(IssueLog log) throws IOException {
+		String path = log.getPath();
+		
 		Matcher spsMatcher = spsRegex.matcher(path);
-		if (spsMatcher.matches()) {
-			return new PhraseParser(tokenStream);
-		}
 		Matcher invservMatcher = invservRegex.matcher(path);
-		if (invservMatcher.matches()) {
+		Matcher vpxdMatcher = vpxdRegex.matcher(path);
+
+		if (   spsMatcher.matches()
+			|| invservMatcher.matches()
+			|| vpxdMatcher.matches()) {
+			
+			ANTLRInputStream inputStream = new ANTLRInputStream(log.getStream());
+			PhraseLexer lexer = new PhraseLexer(inputStream);
+			CommonTokenStream tokenStream = new CommonTokenStream(lexer);
+
 			return new PhraseParser(tokenStream);
 		}
+		
 		return null;
 	}
 
 	public void computePhrases(IssueLog log, OutputStream outputStream) throws IOException {
-		ANTLRInputStream inputStream = new ANTLRInputStream(log.getStream());
-		PhraseLexer lexer = new PhraseLexer(inputStream);
-		CommonTokenStream tokenStream = new CommonTokenStream(lexer);
 		
-		PhraseParser parser = getParser(log.getPath(), tokenStream);
-		
+		PhraseParser parser = getParser(log);
 		if (parser == null)
 			return;
 

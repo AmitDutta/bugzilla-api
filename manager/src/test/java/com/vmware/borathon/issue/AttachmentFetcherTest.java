@@ -83,7 +83,7 @@ public class AttachmentFetcherTest {
       }
    }
    
-   @Test
+   //@Test
    public void IssueIteratorWithZipFile() {
       BugFetcher fetcher = new BugFetcher(userName, password);
       Issue issue = fetcher.getBug("786447"); //1350176

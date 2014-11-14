@@ -27,6 +27,7 @@ public class LogReducer {
            
            LogParser parser = new LogParser();
            parser.computePhrases(iLog, outputStream);
+           iLog.getStream().close();
         }
 	}
 }
