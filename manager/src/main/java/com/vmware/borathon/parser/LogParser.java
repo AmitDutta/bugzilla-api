@@ -7,7 +7,6 @@ import java.util.regex.Pattern;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTree;
 
 import com.vmware.borathon.issue.IssueLog;
 
@@ -16,14 +15,14 @@ public class LogParser {
 	private Pattern spsRegex = Pattern.compile(".*/sps\\.log.*");	
 	private Pattern invservRegex = Pattern.compile(".*/inv-svc\\.log.*");
 	
-	ParseTree getParseTree(String path, CommonTokenStream tokenStream) {
+	PhraseParser getParser(String path, CommonTokenStream tokenStream) {
 		Matcher spsMatcher = spsRegex.matcher(path);
 		if (spsMatcher.matches()) {
-			return new PhraseParser(tokenStream).phrases();
+			return new PhraseParser(tokenStream);
 		}
 		Matcher invservMatcher = invservRegex.matcher(path);
 		if (invservMatcher.matches()) {
-			return new PhraseParser(tokenStream).phrases();
+			return new PhraseParser(tokenStream);
 		}
 		return null;
 	}
@@ -33,15 +32,15 @@ public class LogParser {
 		PhraseLexer lexer = new PhraseLexer(inputStream);
 		CommonTokenStream tokenStream = new CommonTokenStream(lexer);
 		
-		ParseTree tree = getParseTree(log.getPath(), tokenStream);
+		PhraseParser parser = getParser(log.getPath(), tokenStream);
 		
-		if (tree == null)
+		if (parser == null)
 			return;
 
 		System.out.println("parse " + log.getPath() + "...");
 
-		PhraseDocumentVisitor visitor = new PhraseDocumentVisitor(outputStream);
-
-		visitor.visit(tree);
+		parser.setBuildParseTree(false);
+		parser.addParseListener(new PhraseDocumentListener(outputStream));
+		parser.phrases();
 	}
 }

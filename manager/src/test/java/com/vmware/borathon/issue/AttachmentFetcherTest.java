@@ -51,7 +51,7 @@ public class AttachmentFetcherTest {
       }
    }
    
-   @Test
+   //@Test
    public void testBugDirectoryEmpty() {
       assertFalse(Util.isEmptyDir(786447, mountDir));
       assertTrue(Util.isEmptyDir(290807, mountDir));
@@ -59,7 +59,7 @@ public class AttachmentFetcherTest {
       assertTrue(Util.isEmptyDir(1306239, mountDir));
    }
    
-   @Test
+   //@Test
    public void testBasicIssueLogIterator() {
       BugFetcher fetcher = new BugFetcher(userName, password);
       Issue issue = fetcher.getBug("1355263"); //1350176
@@ -83,7 +83,7 @@ public class AttachmentFetcherTest {
       }
    }
    
-   @Test
+   //@Test
    public void IssueIteratorWithZipFile() {
       BugFetcher fetcher = new BugFetcher(userName, password);
       Issue issue = fetcher.getBug("786447"); //1350176

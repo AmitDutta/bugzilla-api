@@ -59,7 +59,7 @@ public class LogParserTest {
 	public void javaException() throws IOException {
 		String result = parse(nullException);
 		
-		String expected = PhraseDocumentVisitor.normalizePhrase(nullException);
+		String expected = PhraseDocumentListener.normalizePhrase(nullException);
 		assertEquals(expected, result);
 	}
 
@@ -69,8 +69,8 @@ public class LogParserTest {
 
 		String result = parse(sample);
 		
-		String expected = PhraseDocumentVisitor.normalizePhrase(nullException) +
-					      PhraseDocumentVisitor.normalizePhrase(nullException);
+		String expected = PhraseDocumentListener.normalizePhrase(nullException) +
+				          PhraseDocumentListener.normalizePhrase(nullException);
 		
 		assertEquals(expected, result);
 	}
@@ -111,7 +111,7 @@ public class LogParserTest {
 	public void backtrace() throws IOException {
 		String result = parse(backtraceInvalidArgument);
 		
-		String expected = PhraseDocumentVisitor.normalizePhrase(backtraceInvalidArgument);
+		String expected = PhraseDocumentListener.normalizePhrase(backtraceInvalidArgument);
 		assertEquals(expected, result);
 	}
 
@@ -121,8 +121,8 @@ public class LogParserTest {
 
 		String result = parse(sample);
 		
-		String expected = PhraseDocumentVisitor.normalizePhrase(backtraceInvalidArgument) +
-					      PhraseDocumentVisitor.normalizePhrase(backtraceInvalidArgument);
+		String expected = PhraseDocumentListener.normalizePhrase(backtraceInvalidArgument) +
+				          PhraseDocumentListener.normalizePhrase(backtraceInvalidArgument);
 		
 		assertEquals(expected, result);
 	}
@@ -141,7 +141,7 @@ public class LogParserTest {
 
 		assertEquals(39, count);		
 	}
-	
+
 	@Test
 	public void vpxdLog() throws IOException {
 		FileInputStream stream = new FileInputStream("/Users/ggeorgiev/Downloads/vc-pa-rdinfra3-vm3-dhcp1529-2014-08-14--01.43/var/log/vmware/vpx/vpxd-6.log");
@@ -154,7 +154,8 @@ public class LogParserTest {
 		output.write(result.getBytes());
 		output.close();
 
-		assertEquals(39, count);		
+		assertEquals(11, count);		
 	}
-*/	
+*/
 }
+ 

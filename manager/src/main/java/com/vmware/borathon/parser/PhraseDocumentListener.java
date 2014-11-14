@@ -3,11 +3,11 @@ package com.vmware.borathon.parser;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class PhraseDocumentVisitor extends PhraseBaseVisitor<Boolean> {
+public class PhraseDocumentListener extends PhraseBaseListener {
 	
 	private OutputStream outputStream;
 
-	public PhraseDocumentVisitor(OutputStream outputStream) {
+	public PhraseDocumentListener(OutputStream outputStream) {
 		this.outputStream = outputStream;
 	}
 	
@@ -15,7 +15,7 @@ public class PhraseDocumentVisitor extends PhraseBaseVisitor<Boolean> {
 		return phrase.replaceAll("\n", " & ") + "\n";
 	}
 	
-	private Boolean handlePhrase(String phrase) {		
+	private void handlePhrase(String phrase) {		
 		phrase = normalizePhrase(phrase);
 		try {
 			if (phrase.length() > 50)
@@ -25,18 +25,16 @@ public class PhraseDocumentVisitor extends PhraseBaseVisitor<Boolean> {
 				
 			outputStream.write(phrase.getBytes());
 		} catch (IOException e) {
-			return false;
 		}
-		return true;		
 	}
 	
 	@Override 
-	public Boolean visitJavaException(PhraseParser.JavaExceptionContext ctx) {
-		return handlePhrase(ctx.getText());
+	public void exitJavaException(PhraseParser.JavaExceptionContext ctx) {
+		handlePhrase(ctx.getText());
 	}
 	
 	@Override 
-	public Boolean visitBacktrace(PhraseParser.BacktraceContext ctx) {
-		return handlePhrase(ctx.getText());
+	public void exitBacktrace(PhraseParser.BacktraceContext ctx) {
+		handlePhrase(ctx.getText());
 	}
 }
