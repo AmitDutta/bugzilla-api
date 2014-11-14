@@ -22,6 +22,7 @@ import b4j.core.Issue;
 
 public class AttachmentFetcherTest {
    private static String mountDir;
+   private static String mountDir1;
    private static String unzipDir;
    private static String userName;
    private static String password;
@@ -40,6 +41,7 @@ public class AttachmentFetcherTest {
       }
       
       mountDir = System.getProperty("java.io.tmpdir") + "bugs/";
+      mountDir1 = System.getProperty("java.io.tmpdir") + "bugs-archive/";
       unzipDir = System.getProperty("java.io.tmpdir") + "unzip/";
       String cmd = "mount -t nfs bugs.eng.vmware.com:/bugs " + mountDir;
       File destDir = new File(mountDir);
@@ -53,14 +55,33 @@ public class AttachmentFetcherTest {
       }catch(Exception ex) {
          ex.printStackTrace();
       }
+      
+      cmd = "mount -t nfs bugs-archive.eng.vmware.com:/bugs-archive " + mountDir1;
+      destDir = new File(mountDir1);
+      if (!destDir.exists()) {
+         destDir.mkdirs();
+      }
+      System.out.println("Executing: " + cmd);
+      try {
+         Process p = Runtime.getRuntime().exec(cmd);
+         p.waitFor();
+      }catch(Exception ex) {
+         ex.printStackTrace();
+      }
    }
    
-   @Ignore @Test
+   @Test
    public void testBugDirectoryEmpty() {
       assertFalse(Util.isEmptyDir(786447, mountDir));
       assertTrue(Util.isEmptyDir(290807, mountDir));
       assertFalse(Util.isEmptyDir(717116, mountDir));
       assertTrue(Util.isEmptyDir(1306239, mountDir));
+   }
+   
+   @Test
+   public void testMountDir() {
+      assertEquals(mountDir1, Util.getCorrectMountDir(905844, mountDir, mountDir1));
+      assertEquals(mountDir, Util.getCorrectMountDir(786447, mountDir, mountDir1));
    }
    
    @Ignore @Test
@@ -70,10 +91,11 @@ public class AttachmentFetcherTest {
          Scanner sc = new Scanner(new File (allbugs));
          while (sc.hasNext()) {
             String bugId = sc.next();
-            if (!Util.isEmptyDir(Integer.parseInt(bugId), mountDir)) {
+            String mountpath = Util.getCorrectMountDir(Integer.parseInt(bugId), mountDir, mountDir1);
+            if (!Util.isEmptyDir(Integer.parseInt(bugId), mountpath)) {
                System.out.print(bugId + ",");
                try {
-                  File file = new File(Util.getAttachmentDir(Integer.parseInt(bugId), mountDir + "files/"));
+                  File file = new File(Util.getAttachmentDir(Integer.parseInt(bugId), mountpath + "files/"));
                   System.out.println(FileUtils.sizeOfDirectory(file));
                }catch (Exception ex) {
                   System.out.println("failing: " + ex.getMessage());
@@ -90,14 +112,19 @@ public class AttachmentFetcherTest {
    public void testBasicIssueLogIterator() {
       BugFetcher fetcher = new BugFetcher(userName, password);
       Map<String, Boolean> map = new HashMap<String, Boolean>();
-      Issue issue = fetcher.getBug("1350176"); //1350176 //1355263 //854760 //1016604
+      Issue issue = fetcher.getBug("854760"); //1350176 //1355263 //854760 //1016604 //905844
       if (issue != null) {
-         AttachmentFetcher aFetcher = new AttachmentFetcher(issue, mountDir + "files/", unzipDir);
+         
+         // Check which mount point to pass on
+         //String mountpath = mountDir + "files/";
+         String mountpath = Util.getCorrectMountDir(Integer.parseInt(issue.getId()), mountDir, mountDir1);
+         AttachmentFetcher aFetcher = new AttachmentFetcher(issue, mountpath + "files/", unzipDir);
          aFetcher.processLogs();
          Iterator<IssueLog> iterator = aFetcher.iterator();
          while (iterator.hasNext()) {
             IssueLog iLog = iterator.next();
             assertNotNull(iLog.getPath());
+            System.out.println("->:" + iLog.getPath());
             assertFalse(map.containsKey(iLog.getPath()));
             map.put(iLog.getPath(), true);
             System.out.println(iLog.getPath());
@@ -112,12 +139,13 @@ public class AttachmentFetcherTest {
       }
    }
    
-   @Test
+   @Ignore @Test
    public void IssueIteratorWithZipFile() {
       BugFetcher fetcher = new BugFetcher(userName, password);
       Issue issue = fetcher.getBug("786447"); //1350176
       if (issue != null) {
-         AttachmentFetcher aFetcher = new AttachmentFetcher(issue, mountDir + "files/", unzipDir);
+         String mountpath = Util.getCorrectMountDir(Integer.parseInt(issue.getId()), mountDir, mountDir1);
+         AttachmentFetcher aFetcher = new AttachmentFetcher(issue, mountpath + "files/", unzipDir);
          aFetcher.processLogs();
          Iterator<IssueLog> iterator = aFetcher.iterator();
          while (iterator.hasNext()) {
@@ -142,8 +170,9 @@ public class AttachmentFetcherTest {
          Scanner sc = new Scanner(new File (allbugs));
          while (sc.hasNext()) {
             String bugId = sc.next();
-            String mountPath = mountDir + "files/";
-            if (!Util.isEmptyDir(Integer.parseInt(bugId), mountDir)) {
+            String mountpath = Util.getCorrectMountDir(Integer.parseInt(bugId), mountDir, mountDir1);
+            mountpath = mountDir + "files/";
+            if (!Util.isEmptyDir(Integer.parseInt(bugId), mountpath)) {
                System.out.println(bugId);
             }
          }
@@ -168,6 +197,11 @@ public class AttachmentFetcherTest {
          System.out.println("Executing: " + cmd);
          Process p = Runtime.getRuntime().exec(cmd);
          p.waitFor();
+         
+         cmd = "umount " + mountDir1;
+         System.out.println("Executing: " + cmd);
+         p = Runtime.getRuntime().exec(cmd);
+         p.waitFor();        
       }catch(Exception ex) {
          ex.printStackTrace();
       }

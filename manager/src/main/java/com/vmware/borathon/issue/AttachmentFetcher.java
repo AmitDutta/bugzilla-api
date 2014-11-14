@@ -38,20 +38,6 @@ public class AttachmentFetcher {
    
    public Issue getIssue() { return issue; }
    
-   public String getAttachmentDir() {
-      int id = Integer.parseInt(issue.getId());
-      StringBuffer path = new StringBuffer(sourceDirPrefix);
-      path.append("0");
-      StringBuffer ret = new StringBuffer();
-      while (id > 0) {
-         ret.append(id % 10);
-         ret.append("/");
-         id /= 10;
-      }
-      path.append(ret.reverse().toString());
-      return path.toString();
-   }
-   
    public Iterator<IssueLog> GetLogIterator(Issue issue) {
       List<IssueLog> logs = new ArrayList<IssueLog>();
 	   return logs.iterator();
@@ -66,6 +52,7 @@ public class AttachmentFetcher {
          System.out.println("Could not create tmp directory");
          return;
       }
+      System.out.println("COPY END");
       
       // Copy all log files to temporary directory
       if (!copyDirectory(tmpBugPath)) {
@@ -98,7 +85,7 @@ public class AttachmentFetcher {
    private boolean copyDirectory(String tmpBugPath) {
       boolean copied = false;
       String sourceBugPath = Util.getAttachmentDir(Integer.parseInt(issue.getId()), sourceDirPrefix);
-      System.out.println("source bug path: " + sourceBugPath);
+      System.out.println("Copy SRC: " + sourceBugPath + ", DEST: " + tmpBugPath);
       // Copy all log files to tmp directory
       File source = new File (sourceBugPath);
       File dest = new File (tmpBugPath);
@@ -160,7 +147,7 @@ public class AttachmentFetcher {
                   untar.waitFor();
                   
                   String unzippedFile = getFileNameFromGz(file.getAbsolutePath());
-                  if (new File(unzippedFile).exists()) {
+                  if (new File(unzippedFile).exists() && !logs.contains(unzippedFile)) {
                      logs.add(unzippedFile);
                   }
                   file.delete();

@@ -15,7 +15,7 @@ import com.vmware.borathon.issue.AttachmentFetcher;
 import com.vmware.borathon.issue.BugFetcher;
 
 public class LogReducerTest {
-   private static String mountDir;
+   private static String mountDir, mountDir1;
    private static String unzipDir;
    private static String userName;
    private static String password;
@@ -35,6 +35,7 @@ public class LogReducerTest {
       }
       
       mountDir = System.getProperty("java.io.tmpdir") + "bugs/";
+      mountDir1 = System.getProperty("java.io.tmpdir") + "bugs-archive/";
       unzipDir = System.getProperty("java.io.tmpdir") + "unzip/";
       outputDir = new File(System.getProperty("java.io.tmpdir") + "output/");
       
@@ -44,6 +45,19 @@ public class LogReducerTest {
       
       String cmd = "mount -t nfs bugs.eng.vmware.com:/bugs " + mountDir;
       File destDir = new File(mountDir);
+      if (!destDir.exists()) {
+         destDir.mkdirs();
+      }
+      System.out.println("Executing: " + cmd);
+      try {
+         Process p = Runtime.getRuntime().exec(cmd);
+         p.waitFor();
+      }catch(Exception ex) {
+         ex.printStackTrace();
+      }
+      
+      cmd = "mount -t nfs bugs-archive.eng.vmware.com:/bugs-archive " + mountDir1;
+      destDir = new File(mountDir1);
       if (!destDir.exists()) {
          destDir.mkdirs();
       }
@@ -67,7 +81,9 @@ public class LogReducerTest {
        
        FileOutputStream output = new FileOutputStream(outputDir + "/" + number + ".txt");
        
-       AttachmentFetcher aFetcher = new AttachmentFetcher(issue, mountDir + "files/", unzipDir);
+       String mountpath = Util.getCorrectMountDir(Integer.parseInt(issue.getId()), mountDir, mountDir1);
+       
+       AttachmentFetcher aFetcher = new AttachmentFetcher(issue, mountpath + "files/", unzipDir);
 
        LogReducer logReducer = new LogReducer(aFetcher, output);
        
@@ -111,6 +127,11 @@ public class LogReducerTest {
          System.out.println("Executing: " + cmd);
          Process p = Runtime.getRuntime().exec(cmd);
          p.waitFor();
+         
+         cmd = "umount " + mountDir1;
+         System.out.println("Executing: " + cmd);
+         p = Runtime.getRuntime().exec(cmd);
+         p.waitFor(); 
       }catch(Exception ex) {
          ex.printStackTrace();
       }

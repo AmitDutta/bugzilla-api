@@ -4,6 +4,16 @@ import java.io.File;
 
 public final class Util {
    
+   public static String getCorrectMountDir(int id, String mountDir, String mountDir1) {
+      String mountPath = mountDir;
+      if(!Util.isEmptyDir(id, mountPath)) {
+         return mountPath;
+      }
+      
+      mountPath = mountDir1;
+      return mountPath;
+   }
+   
    public static String getAttachmentDir(int id, String sourceDirPrefix) {
       StringBuffer path = new StringBuffer(sourceDirPrefix);
       StringBuffer ret = new StringBuffer();
