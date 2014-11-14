@@ -3,6 +3,7 @@ package com.vmware.borathon;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Scanner;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -16,11 +17,23 @@ import com.vmware.borathon.issue.BugFetcher;
 public class LogReducerTest {
    private static String mountDir;
    private static String unzipDir;
-
+   private static String userName;
+   private static String password;
    private static File outputDir;
    
    @BeforeClass
    public static void setUpBeforeClass() throws Exception {
+      try {
+         String configPath = System.getProperty("user.dir") + "/data/config.txt";
+         File file = new File(configPath);
+         Scanner scanner = new Scanner(file);
+         userName = scanner.next();
+         password = scanner.next();
+         scanner.close();
+      }catch (Exception ex) {
+         ex.printStackTrace();
+      }
+      
       mountDir = System.getProperty("java.io.tmpdir") + "bugs/";
       unzipDir = System.getProperty("java.io.tmpdir") + "unzip/";
       outputDir = new File(System.getProperty("java.io.tmpdir") + "output/");
@@ -43,11 +56,9 @@ public class LogReducerTest {
       }
    }
    
-   //@Test
-   public void testReduce() throws IOException {
-	   String number = "1355263"; 
+   public void testReduce(String number) throws IOException {
 	   
-       BugFetcher fetcher = new BugFetcher("ggeorgiev", "");
+	    BugFetcher fetcher = new BugFetcher(userName, password);
        Issue issue = fetcher.getBug(number);
        
        FileOutputStream output = new FileOutputStream(outputDir + "/" + number + ".txt");
@@ -57,6 +68,20 @@ public class LogReducerTest {
        LogReducer logReducer = new LogReducer(aFetcher, output);
        
        logReducer.reduce();
+   }
+   
+   @Test
+   public void testBatchReduce() {
+      try {
+         String file = System.getProperty("user.dir") + "/data/Bug-With-Attachment.txt";
+         Scanner scanner = new Scanner(file);
+         while (scanner.hasNext()) {
+            testReduce(scanner.next());
+         }
+         scanner.close();
+      }catch (Exception ex) {
+         ex.printStackTrace();
+      }
    }
    
    @AfterClass
