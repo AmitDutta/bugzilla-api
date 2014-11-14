@@ -3,6 +3,7 @@ package com.vmware.borathon.issue;
 import static org.junit.Assert.*;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Scanner;
@@ -75,7 +76,6 @@ public class AttachmentFetcherTest {
             try {
                iLog.getStream().close();
             } catch (IOException e) {
-               // TODO Auto-generated catch block
                e.printStackTrace();
             }
          }
@@ -83,7 +83,7 @@ public class AttachmentFetcherTest {
       }
    }
    
-   @Test
+   @Ignore @Test
    public void IssueIteratorWithZipFile() {
       BugFetcher fetcher = new BugFetcher(userName, password);
       Issue issue = fetcher.getBug("786447"); //1350176
@@ -99,11 +99,28 @@ public class AttachmentFetcherTest {
             try {
                iLog.getStream().close();
             } catch (IOException e) {
-               // TODO Auto-generated catch block
                e.printStackTrace();
             }
          }
          aFetcher.clean();
+      }
+   }
+   
+   @Test
+   public void FindLogWithAttachment() {
+      String allbugs = System.getProperty("user.dir") + "/data/All-bugs.txt";
+      try {
+         Scanner sc = new Scanner(new File (allbugs));
+         while (sc.hasNext()) {
+            String bugId = sc.next();
+            String mountPath = mountDir + "files/";
+            if (!Util.isEmptyDir(Integer.parseInt(bugId), mountDir)) {
+               System.out.println(bugId);
+            }
+         }
+         sc.close();
+      } catch (FileNotFoundException e) {
+         e.printStackTrace();
       }
    }
    
