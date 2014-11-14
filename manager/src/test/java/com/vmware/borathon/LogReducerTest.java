@@ -24,7 +24,7 @@ public class LogReducerTest {
    @BeforeClass
    public static void setUpBeforeClass() throws Exception {
       try {
-         String configPath = System.getProperty("user.dir") + "/data/config.txt";
+         String configPath = System.getProperty("user.dir") + "/../../config.txt";
          File file = new File(configPath);
          Scanner scanner = new Scanner(file);
          userName = scanner.next();
@@ -79,7 +79,7 @@ public class LogReducerTest {
        
        System.out.println("End: " + number);
    }
-   
+/*   
    @Test
    public void testOneReduce() {
       try {
@@ -88,11 +88,11 @@ public class LogReducerTest {
          ex.printStackTrace();
       }
    }
-
+*/
    @Test
    public void testBatchReduce() {
       try {
-         String file = System.getProperty("user.dir") + "/data/bugs";
+         String file = System.getProperty("user.dir") + "/data/filtered-bugs";
          Scanner scanner = new Scanner(new File(file));
          while (scanner.hasNext()) {
             testReduce(scanner.next());

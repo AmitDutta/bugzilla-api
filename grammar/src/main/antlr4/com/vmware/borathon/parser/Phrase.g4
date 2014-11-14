@@ -19,34 +19,36 @@ javaException
 	;
    
 backtrace
-   :  WS* ARROW WS+ OPEN_SQ_BRAKE BACKTRACE WS BEGIN CLOSE_SQ_BRAKE (~EOL)* EOL
+   :  ARROW WS+ OPEN_SQ_BRAKE BACKTRACE WS BEGIN CLOSE_SQ_BRAKE (~EOL)* EOL
       (WS* ARROW WS+ BACKTRACE (~EOL)* EOL)*
       WS* ARROW WS+ OPEN_SQ_BRAKE BACKTRACE WS END CLOSE_SQ_BRAKE EOL
    ;
 
 unknown
-   :  ARROW
-   |  JAVA_EXTENSION
-
-   |  AT
-   |  BACKTRACE
-   |  BEGIN
-   |  END
-   |  UNKNOWN_SOURCE
-
-   |  OPEN_BRAKET
-   |  CLOSE_BRAKET
-   |  OPEN_SQ_BRAKE
-   |  CLOSE_SQ_BRAKE
-   |  COLON
-   |  DOT
-   |  DOLLAR
-
+   :  IDENTIFIER
+   |  ARROW
    |  EXCEPTION
-   |  IDENTIFIER
-   |  NUMBER
-   |  WS
-   |  EOL
+
+   |  (
+         JAVA_EXTENSION
+
+      |  AT
+      |  BACKTRACE
+      |  BEGIN
+      |  END
+      |  UNKNOWN_SOURCE
+
+      |  OPEN_BRAKET
+      |  CLOSE_BRAKET
+      |  OPEN_SQ_BRAKE
+      |  CLOSE_SQ_BRAKE
+      |  COLON
+      |  DOT
+      |  DOLLAR
+
+      |  NUMBER
+      |  WS
+      |  EOL)+
    ;
 
 ARROW:               '-->';
@@ -68,7 +70,7 @@ DOLLAR:              '$';
 
 EXCEPTION
    :  LETTER (LETTER|ID_DIGIT)*
-      'Exception'
+      ('Exception'|'Error')
    ;
 
 IDENTIFIER
