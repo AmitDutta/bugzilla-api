@@ -59,12 +59,11 @@ public class LogReducerTest {
    public void testReduce(String number) throws IOException {
        System.out.println("Start: " + number);
 	   
+       String outputPath = outputDir + "/" + number + ".txt";
+       if (new File(outputPath).exists()) return;
+       
        BugFetcher fetcher = new BugFetcher(userName, password);
        Issue issue = fetcher.getBug(number);
-       
-       String outputPath = outputDir + "/" + number + ".txt";
-       
-       if (new File(outputPath).exists()) return;
        
        FileOutputStream output = new FileOutputStream(outputDir + "/" + number + ".txt");
        
@@ -90,11 +89,11 @@ public class LogReducerTest {
          ex.printStackTrace();
       }
    }
-   
+*/  
    @Test
    public void testBatchReduce() {
       try {
-         String file = System.getProperty("user.dir") + "/data/Bug-With-Attachment.txt";
+         String file = System.getProperty("user.dir") + "/data/bugs";
          Scanner scanner = new Scanner(new File(file));
          while (scanner.hasNext()) {
             testReduce(scanner.next());
@@ -105,7 +104,6 @@ public class LogReducerTest {
          ex.printStackTrace();
       }
    }
-*/
    
    @AfterClass
    public static void tearDownAfterClass() throws Exception {
