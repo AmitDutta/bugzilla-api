@@ -29,7 +29,7 @@ public class AttachmentFetcherTest {
    @BeforeClass
    public static void setUpBeforeClass() throws Exception {
       try {
-         String configPath = System.getProperty("user.dir") + "/../../config.txt";
+         String configPath = System.getProperty("user.dir") + "/data/config.txt";
          File file = new File(configPath);
          Scanner scanner = new Scanner(file);
          userName = scanner.next();

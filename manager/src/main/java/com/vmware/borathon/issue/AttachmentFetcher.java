@@ -168,7 +168,9 @@ public class AttachmentFetcher {
                   ex.printStackTrace();
                }
             } else {
-               logs.add(file.getAbsolutePath());
+               if (!logs.contains(file.getAbsolutePath()) && file.exists()){
+                  logs.add(file.getAbsolutePath());
+               }
             }
          }
       }
@@ -206,11 +208,15 @@ public class AttachmentFetcher {
       public IssueLog next() {
          String path = logs.get(i);
          IssueLog issueLog = null;
-         try {
-            issueLog = new IssueLog(path, new BufferedInputStream(new FileInputStream(new File(path))));
-            i++;
-         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+         BufferedInputStream bs = null;
+         while (bs == null) {
+            try {
+               bs = new BufferedInputStream(new FileInputStream(new File(path)));
+               issueLog = new IssueLog(path, bs);
+               i++;
+            }catch (Exception ex) {
+               System.out.println(ex.getMessage());
+            }
          }
          return issueLog;
       }
