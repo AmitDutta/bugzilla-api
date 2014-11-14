@@ -1,2 +1,2 @@
-USERNAME
-PWD
+ggeorgiev
+global`12
