@@ -47,7 +47,6 @@ unknown
    |  NUMBER
    |  WS
    |  EOL
-   |  ANY
    ;
 
 ARROW:               '-->';
@@ -91,7 +90,7 @@ EOL
 	;
 
 ANY
-   :  .
+   :  . -> skip
    ;
 
 fragment

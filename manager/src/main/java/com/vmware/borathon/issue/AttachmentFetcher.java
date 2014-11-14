@@ -123,9 +123,13 @@ public class AttachmentFetcher {
          } else if (file.isFile()) {
             if (file.getName().endsWith(".tgz") || file.getName().endsWith(".tar.gz")) {
           	   System.out.println("UNTAR " + file.getAbsolutePath() + "...");
-               String cmd = "tar -zxf " + file.getAbsolutePath() + " -C " + file.getParent();
                try {
-                  Process untar = Runtime.getRuntime().exec(cmd);
+            	   ProcessBuilder pb = new ProcessBuilder("tar", 
+            			   								  "-zxf", 
+            			   								  file.getAbsolutePath(), 
+            			   								  "-C", 
+            			   								  file.getParent());
+                   Process untar = pb.start();
                   untar.waitFor();
                   items.add(file.getParent());
                   file.delete();
@@ -144,11 +148,15 @@ public class AttachmentFetcher {
                }
                
             } else if (file.getName().endsWith(".gz")) {
-               String cmd = "gzip -d " + file.getAbsolutePath();
                try {
             	  System.out.println("uncompress " + file.getAbsolutePath() + "...");
-                  Process untar = Runtime.getRuntime().exec(cmd);
+            	  ProcessBuilder pb = new ProcessBuilder("gzip", 
+            			  								 "-d", 
+            			  								 file.getAbsolutePath());
+
+            	  Process untar = pb.start();
                   untar.waitFor();
+                  
                   String unzippedFile = getFileNameFromGz(file.getAbsolutePath());
                   if (new File(unzippedFile).exists()) {
                      logs.add(unzippedFile);

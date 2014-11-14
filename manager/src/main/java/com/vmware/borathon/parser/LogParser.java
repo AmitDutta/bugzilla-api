@@ -38,15 +38,19 @@ public class LogParser {
 	}
 
 	public void computePhrases(IssueLog log, OutputStream outputStream) throws IOException {
-		
-		PhraseParser parser = getParser(log);
-		if (parser == null)
-			return;
-
-		System.out.println("parse " + log.getPath() + "...");
-
-		parser.setBuildParseTree(false);
-		parser.addParseListener(new PhraseDocumentListener(outputStream));
-		parser.phrases();
+		try {
+			PhraseParser parser = getParser(log);
+			if (parser == null)
+				return;
+	
+			System.out.println("parse " + log.getPath() + "...");
+	
+			parser.setBuildParseTree(false);
+			parser.addParseListener(new PhraseDocumentListener(outputStream));
+			parser.phrases();
+		}
+		catch (OutOfMemoryError e) {
+			e.printStackTrace();
+		}
 	}
 }

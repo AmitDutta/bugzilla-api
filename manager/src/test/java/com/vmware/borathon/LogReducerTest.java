@@ -80,16 +80,15 @@ public class LogReducerTest {
        System.out.println("End: " + number);
    }
    
-/*
    @Test
    public void testOneReduce() {
       try {
-    	  testReduce("854760");
+    	  testReduce("1016604");
       } catch (Exception ex) {
          ex.printStackTrace();
       }
    }
-*/  
+
    @Test
    public void testBatchReduce() {
       try {
