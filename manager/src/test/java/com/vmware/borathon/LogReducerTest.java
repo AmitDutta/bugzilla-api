@@ -56,9 +56,9 @@ public class LogReducerTest {
       }
    }
    
-   public void testReduce(String number) throws IOException {
+   public void testReduce(String number) throws IOException {	   
+	   BugFetcher fetcher = new BugFetcher(userName, password);
 	   
-	    BugFetcher fetcher = new BugFetcher(userName, password);
        Issue issue = fetcher.getBug(number);
        
        FileOutputStream output = new FileOutputStream(outputDir + "/" + number + ".txt");
@@ -68,6 +68,16 @@ public class LogReducerTest {
        LogReducer logReducer = new LogReducer(aFetcher, output);
        
        logReducer.reduce();
+   }
+   
+/*
+   @Test
+   public void testOneReduce() {
+      try {
+    	  testReduce("854760");
+      } catch (Exception ex) {
+         ex.printStackTrace();
+      }
    }
    
    @Test
@@ -83,6 +93,7 @@ public class LogReducerTest {
          ex.printStackTrace();
       }
    }
+*/
    
    @AfterClass
    public static void tearDownAfterClass() throws Exception {

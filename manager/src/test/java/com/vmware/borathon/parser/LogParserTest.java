@@ -126,7 +126,23 @@ public class LogParserTest {
 		
 		assertEquals(expected, result);
 	}
+
 /*
+	@Test
+	public void spsLog() throws IOException {
+		FileInputStream stream = new FileInputStream("/var/folders/pr/vdtn7bd905n5n62bhxql87t0002lsj/T/unzip/854760/Mar-21-2012/vcsupport-3-16-2012-16-48/Profile-Driven Storage/logs/sps.log.1");
+		
+		String result = parse(stream);
+		
+		int count = StringUtils.countMatches(result, "\n");
+		
+		FileOutputStream output = new FileOutputStream("/var/folders/pr/vdtn7bd905n5n62bhxql87t0002lsj/T/unzip/854760/Mar-21-2012/vcsupport-3-16-2012-16-48/Profile-Driven Storage/logs/sps.log.1.txt");
+		output.write(result.getBytes());
+		output.close();
+
+		assertEquals(39, count);		
+	}
+	
 	@Test
 	public void spsLog() throws IOException {
 		FileInputStream stream = new FileInputStream("/Users/ggeorgiev/Downloads/vc-sof2-lab8-dhcp516-2014-11-07--14.59/var/log/vmware/vmware-sps/sps.log.1");
@@ -141,6 +157,8 @@ public class LogParserTest {
 
 		assertEquals(39, count);		
 	}
+	
+	/var/folders/pr/vdtn7bd905n5n62bhxql87t0002lsj/T/unzip/854760/Mar-21-2012/vcsupport-3-16-2012-16-48/Profile-Driven Storage/logs/sps.log.1
 
 	@Test
 	public void vpxdLog() throws IOException {
