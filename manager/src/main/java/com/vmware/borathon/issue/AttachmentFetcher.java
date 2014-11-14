@@ -1,5 +1,6 @@
 package com.vmware.borathon.issue;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -200,7 +201,7 @@ public class AttachmentFetcher {
          String path = logs.get(i);
          IssueLog issueLog = null;
          try {
-            issueLog = new IssueLog(path, new FileInputStream(new File(path)));
+            issueLog = new IssueLog(path, new BufferedInputStream(new FileInputStream(new File(path))));
             i++;
          } catch (FileNotFoundException e) {
             e.printStackTrace();

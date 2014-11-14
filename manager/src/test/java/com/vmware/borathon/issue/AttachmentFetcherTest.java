@@ -60,10 +60,10 @@ public class AttachmentFetcherTest {
       assertTrue(Util.isEmptyDir(1306239, mountDir));
    }
    
-   //@Test
+   @Test
    public void testBasicIssueLogIterator() {
       BugFetcher fetcher = new BugFetcher(userName, password);
-      Issue issue = fetcher.getBug("1355263"); //1350176
+      Issue issue = fetcher.getBug("854760"); //1350176 //1355263
       if (issue != null) {
          AttachmentFetcher aFetcher = new AttachmentFetcher(issue, mountDir + "files/", unzipDir);
          aFetcher.processLogs();
@@ -106,7 +106,7 @@ public class AttachmentFetcherTest {
       }
    }
    
-   @Test
+   //@Test
    public void FindLogWithAttachment() {
       String allbugs = System.getProperty("user.dir") + "/data/All-bugs.txt";
       try {
