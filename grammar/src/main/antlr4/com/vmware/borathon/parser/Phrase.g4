@@ -11,40 +11,13 @@ phrase
    ;
 
 javaException
-	:	javaExceptionName (javaExceptionMessage|EOL)
-      javaExceptionLocation
+	:	( (IDENTIFIER DOT)* EXCEPTION) ( (COLON (~AT)*) | EOL)
+      (  WS* AT WS+
+         IDENTIFIER ( (DOT | DOLLAR) IDENTIFIER)+
+         OPEN_BRAKET (IDENTIFIER JAVA_EXTENSION COLON NUMBER | UNKNOWN_SOURCE) CLOSE_BRAKET
+         EOL)+
 	;
-
-javaExceptionName
-   :  (IDENTIFIER DOT)*
-      EXCEPTION
-   ;
-
-javaExceptionMessage
-   :  COLON (~AT)*
-   ;
-
-javaExceptionLocation
-   :  javaLocation+
-   ;
-
-javaLocation
-   :  WS* AT WS+
-      IDENTIFIER (javaLocationDelimiter IDENTIFIER)+
-      OPEN_BRAKET javaFile CLOSE_BRAKET
-      EOL
-   ;
-
-javaFile
-   :  IDENTIFIER JAVA_EXTENSION COLON NUMBER
-   |  UNKNOWN_SOURCE
-   ;
-
-javaLocationDelimiter
-   :  DOT
-   |  DOLLAR
-   ;
-
+   
 backtrace
    :  WS* ARROW WS+ OPEN_SQ_BRAKE BACKTRACE WS BEGIN CLOSE_SQ_BRAKE (~EOL)* EOL
       (WS* ARROW WS+ BACKTRACE (~EOL)* EOL)*
